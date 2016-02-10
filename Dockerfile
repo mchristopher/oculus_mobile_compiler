@@ -9,8 +9,8 @@ FROM ubuntu:trusty
 # Install Java and 32-bit tools for compiling Android
 RUN dpkg --add-architecture i386 && \
     apt-get update -y && \
-    apt-get install -y software-properties-common libc6:i386 libncurses5:i386 libstdc++6:i386 lib32z1 unzip p7zip-full python build-essential dos2unix && \
-    wget -O - https://deb.nodesource.com/setup_5.x > /dev/null | bash && \
+    apt-get install -y software-properties-common libc6:i386 libncurses5:i386 libstdc++6:i386 lib32z1 p7zip-full python build-essential dos2unix wget && \
+    wget -qO- https://deb.nodesource.com/setup_5.x | bash - && \
     add-apt-repository ppa:webupd8team/java -y && \
     apt-get update -y && \
     echo oracle-java8-installer shared/accepted-oracle-license-v1-1 select true | /usr/bin/debconf-set-selections && \
@@ -38,7 +38,7 @@ ENV GRADLE_VERSION 2.11
 ENV GRADLE_HOME /opt/gradle
 RUN cd && \
     wget -q https://services.gradle.org/distributions/gradle-${GRADLE_VERSION}-bin.zip && \
-    unzip gradle-${GRADLE_VERSION}-bin.zip && \
+    7z x -y gradle-${GRADLE_VERSION}-bin.zip > /dev/null && \
     mv gradle-${GRADLE_VERSION} /opt/gradle && \
     rm gradle-${GRADLE_VERSION}-bin.zip
 
@@ -50,7 +50,8 @@ RUN cd /opt && \
     wget -q https://dl.google.com/android/android-sdk_r24.4.1-linux.tgz && \
     tar -xzf android-sdk_r24.4.1-linux.tgz && \
     rm android-sdk_r24.4.1-linux.tgz && \
-    echo y | android update sdk --no-ui -a --filter tools,platform-tools,${ANDROID_API_LEVELS},build-tools-${ANDROID_BUILD_TOOLS_VERSION}
+    echo y | ${ANDROID_HOME}/tools/android update sdk --no-ui -a --filter tools,platform-tools,${ANDROID_API_LEVELS},build-tools-${ANDROID_BUILD_TOOLS_VERSION} && \
+    rm -fr ~/.android && rm -fr ~/.oracle_jre_usage
 
 # Installs Android NDK
 ENV ANDROID_NDK_VERSION r10e
@@ -62,14 +63,15 @@ RUN cd /opt && \
 
 # Install Oculus SDK
 ENV OCULUS_SDK_VERSION 1.0.0.0
-ENV OCULUS_SDK_HOME /opt/ovr
-RUN mkdir -p /opt/ovr && cd /opt/ovr && \
+ENV OCULUS_SDK_HOME /opt/oculus-sdk
+RUN mkdir -p ${OCULUS_SDK_HOME} && cd ${OCULUS_SDK_HOME} && \
     wget -q https://static.oculus.com/sdk-downloads/ovr_sdk_mobile_${OCULUS_SDK_VERSION}.zip && \
-    unzip -q ovr_sdk_mobile_${OCULUS_SDK_VERSION}.zip -x *.apk && \
+    7z x -y ovr_sdk_mobile_${OCULUS_SDK_VERSION}.zip > /dev/null && \
     rm ovr_sdk_mobile_${OCULUS_SDK_VERSION}.zip && \
     rm -fr ${OCULUS_SDK_HOME}/SourceAssets && \
     rm -fr ${OCULUS_SDK_HOME}/sdcard_SDK && \
     rm -fr ${OCULUS_SDK_HOME}/VrSamples && \
+    rm -fr ${OCULUS_SDK_HOME}/*.apk && \
     touch ${OCULUS_SDK_HOME}/local.properties && \
     chmod a+x ${OCULUS_SDK_HOME}/gradlew && \
     dos2unix ${OCULUS_SDK_HOME}/gradlew && \
