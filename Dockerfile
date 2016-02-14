@@ -54,12 +54,12 @@ RUN cd /opt && \
     rm -fr ~/.android && rm -fr ~/.oracle_jre_usage
 
 # Installs Android NDK
-ENV ANDROID_NDK_VERSION r10e
-ENV ANDROID_NDK /opt/android-ndk-${ANDROID_NDK_VERSION}
-RUN cd /opt && \
-    wget -q https://dl.google.com/android/ndk/android-ndk-${ANDROID_NDK_VERSION}-linux-x86_64.bin && \
-    7z x -y android-ndk-${ANDROID_NDK_VERSION}-linux-x86_64.bin > /dev/null && \
-    rm android-ndk-${ANDROID_NDK_VERSION}-linux-x86_64.bin
+# ENV ANDROID_NDK_VERSION r10e
+#  ENV ANDROID_NDK /opt/android-ndk-${ANDROID_NDK_VERSION}
+#  RUN cd /opt && \
+#     wget -q https://dl.google.com/android/ndk/android-ndk-${ANDROID_NDK_VERSION}-linux-x86_64.bin && \
+#     7z x -y android-ndk-${ANDROID_NDK_VERSION}-linux-x86_64.bin > /dev/null && \
+#     rm android-ndk-${ANDROID_NDK_VERSION}-linux-x86_64.bin
 
 # Install Oculus SDK
 ENV OCULUS_SDK_VERSION 1.0.0.0
