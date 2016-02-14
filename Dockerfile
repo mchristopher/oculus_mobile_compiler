@@ -9,7 +9,7 @@ FROM ubuntu:trusty
 # Install Java and 32-bit tools for compiling Android
 RUN dpkg --add-architecture i386 && \
     apt-get update -y && \
-    apt-get install -y software-properties-common libc6:i386 libncurses5:i386 libstdc++6:i386 lib32z1 p7zip-full python build-essential dos2unix wget && \
+    apt-get install -y software-properties-common libc6:i386 libncurses5:i386 libstdc++6:i386 lib32z1 p7zip-full python build-essential dos2unix wget graphicsmagick imagemagick && \
     wget -qO- https://deb.nodesource.com/setup_5.x | bash - && \
     add-apt-repository ppa:webupd8team/java -y && \
     apt-get update -y && \
