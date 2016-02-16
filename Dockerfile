@@ -10,11 +10,10 @@ FROM ubuntu:trusty
 RUN dpkg --add-architecture i386 && \
     apt-get update -y && \
     apt-get install -y software-properties-common libc6:i386 libncurses5:i386 libstdc++6:i386 lib32z1 p7zip-full python build-essential dos2unix wget && \
-    wget -qO- https://deb.nodesource.com/setup_5.x | bash - && \
     add-apt-repository ppa:webupd8team/java -y && \
     apt-get update -y && \
     echo oracle-java8-installer shared/accepted-oracle-license-v1-1 select true | /usr/bin/debconf-set-selections && \
-    apt-get install -y oracle-java8-installer nodejs && \
+    apt-get install -y oracle-java8-installer && \
     apt-get remove software-properties-common -y && \
     rm -rf /var/lib/apt/lists/* && \
     rm -rf /var/cache/oracle-jdk8-installer/* && \
@@ -23,24 +22,6 @@ RUN dpkg --add-architecture i386 && \
     apt-get clean
 
 ENV JAVA_HOME /usr/lib/jvm/java-8-oracle
-
-# Installs Ant
-ENV ANT_VERSION 1.9.4
-ENV ANT_HOME /opt/ant
-RUN cd && \
-    wget -q http://archive.apache.org/dist/ant/binaries/apache-ant-${ANT_VERSION}-bin.tar.gz && \
-    tar -xzf apache-ant-${ANT_VERSION}-bin.tar.gz && \
-    mv apache-ant-${ANT_VERSION} /opt/ant && \
-    rm apache-ant-${ANT_VERSION}-bin.tar.gz
-
-# Installs Gradle
-ENV GRADLE_VERSION 2.11
-ENV GRADLE_HOME /opt/gradle
-RUN cd && \
-    wget -q https://services.gradle.org/distributions/gradle-${GRADLE_VERSION}-bin.zip && \
-    7z x -y gradle-${GRADLE_VERSION}-bin.zip > /dev/null && \
-    mv gradle-${GRADLE_VERSION} /opt/gradle && \
-    rm gradle-${GRADLE_VERSION}-bin.zip
 
 # Installs Android SDK & NDK
 ENV ANDROID_API_LEVELS android-19
@@ -54,14 +35,68 @@ RUN cd /opt && \
     rm -fr ~/.android && rm -fr ~/.oracle_jre_usage
 
 # Installs Android NDK
+# NOTE: Removes files not needed by Oculus SDK
 ENV ANDROID_NDK_VERSION r10e
 ENV ANDROID_NDK /opt/android-ndk-${ANDROID_NDK_VERSION}
 RUN cd /opt && \
     wget -q https://dl.google.com/android/ndk/android-ndk-${ANDROID_NDK_VERSION}-linux-x86_64.bin && \
     7z x -y android-ndk-${ANDROID_NDK_VERSION}-linux-x86_64.bin > /dev/null && \
-    rm android-ndk-${ANDROID_NDK_VERSION}-linux-x86_64.bin
+    rm android-ndk-${ANDROID_NDK_VERSION}-linux-x86_64.bin && \
+    rm -fr /opt/android-ndk-r10e/docs && \
+    rm -fr /opt/android-ndk-r10e/prebuilt/android-arm && \
+    rm -fr /opt/android-ndk-r10e/prebuilt/android-arm64 && \
+    rm -fr /opt/android-ndk-r10e/prebuilt/android-mips && \
+    rm -fr /opt/android-ndk-r10e/prebuilt/android-mips64 && \
+    rm -fr /opt/android-ndk-r10e/prebuilt/android-x86 && \
+    rm -fr /opt/android-ndk-r10e/prebuilt/android-x86_64 && \
+    rm -fr /opt/android-ndk-r10e/platforms/android-3 && \
+    rm -fr /opt/android-ndk-r10e/platforms/android-4 && \
+    rm -fr /opt/android-ndk-r10e/platforms/android-5 && \
+    rm -fr /opt/android-ndk-r10e/platforms/android-8 && \
+    rm -fr /opt/android-ndk-r10e/platforms/android-9 && \
+    rm -fr /opt/android-ndk-r10e/platforms/android-12 && \
+    rm -fr /opt/android-ndk-r10e/platforms/android-13 && \
+    rm -fr /opt/android-ndk-r10e/platforms/android-14 && \
+    rm -fr /opt/android-ndk-r10e/platforms/android-15 && \
+    rm -fr /opt/android-ndk-r10e/platforms/android-16 && \
+    rm -fr /opt/android-ndk-r10e/platforms/android-17 && \
+    rm -fr /opt/android-ndk-r10e/platforms/android-18 && \
+    rm -fr /opt/android-ndk-r10e/platforms/android-21 && \
+    rm -fr /opt/android-ndk-r10e/samples && \
+    rm -fr /opt/android-ndk-r10e/toolchains/aarch64-linux-android-4.9 && \
+    rm -fr /opt/android-ndk-r10e/toolchains/aarch64-linux-android-clang3.5 && \
+    rm -fr /opt/android-ndk-r10e/toolchains/aarch64-linux-android-clang3.6 && \
+    rm -fr /opt/android-ndk-r10e/toolchains/arm-linux-androideabi-4.9 && \
+    rm -fr /opt/android-ndk-r10e/toolchains/arm-linux-androideabi-clang3.5 && \
+    rm -fr /opt/android-ndk-r10e/toolchains/arm-linux-androideabi-clang3.6 && \
+    rm -fr /opt/android-ndk-r10e/toolchains/llvm-3.5 && \
+    rm -fr /opt/android-ndk-r10e/toolchains/llvm-3.6 && \
+    rm -fr /opt/android-ndk-r10e/toolchains/mips64el-linux-android-4.9 && \
+    rm -fr /opt/android-ndk-r10e/toolchains/mips64el-linux-android-clang3.5 && \
+    rm -fr /opt/android-ndk-r10e/toolchains/mips64el-linux-android-clang3.6 && \
+    rm -fr /opt/android-ndk-r10e/toolchains/mipsel-linux-android-4.8 && \
+    rm -fr /opt/android-ndk-r10e/toolchains/mipsel-linux-android-4.9 && \
+    rm -fr /opt/android-ndk-r10e/toolchains/mipsel-linux-android-clang3.5 && \
+    rm -fr /opt/android-ndk-r10e/toolchains/mipsel-linux-android-clang3.6 && \
+    rm -fr /opt/android-ndk-r10e/toolchains/renderscript && \
+    rm -fr /opt/android-ndk-r10e/toolchains/x86-4.8 && \
+    rm -fr /opt/android-ndk-r10e/toolchains/x86-4.9 && \
+    rm -fr /opt/android-ndk-r10e/toolchains/x86_64-4.9 && \
+    rm -fr /opt/android-ndk-r10e/toolchains/x86_64-clang3.5 && \
+    rm -fr /opt/android-ndk-r10e/toolchains/x86_64-clang3.6 && \
+    rm -fr /opt/android-ndk-r10e/toolchains/x86-clang3.5 && \
+    rm -fr /opt/android-ndk-r10e/toolchains/x86-clang3.6 && \
+    rm -fr /opt/android-ndk-r10e/sources/android && \
+    rm -fr /opt/android-ndk-r10e/sources/cpufeatures && \
+    rm -fr /opt/android-ndk-r10e/sources/third_party && \
+    rm -fr /opt/android-ndk-r10e/sources/cxx-stl/gabi++ && \
+    rm -fr /opt/android-ndk-r10e/sources/cxx-stl/gnu-libstdc++/4.9 && \
+    rm -fr /opt/android-ndk-r10e/sources/cxx-stl/llvm-libc++ && \
+    rm -fr /opt/android-ndk-r10e/sources/cxx-stl/llvm-libc++abi && \
+    rm -fr /opt/android-ndk-r10e/sources/cxx-stl/stlport && \
+    rm -fr /opt/android-ndk-r10e/sources/cxx-stl/system
 
-# Install Oculus SDK
+# Install Oculus SDK & pre-compile libraries
 ENV OCULUS_SDK_VERSION 1.0.0.0
 ENV OCULUS_SDK_HOME /opt/oculus-sdk
 RUN mkdir -p ${OCULUS_SDK_HOME} && cd ${OCULUS_SDK_HOME} && \
@@ -73,6 +108,13 @@ RUN mkdir -p ${OCULUS_SDK_HOME} && cd ${OCULUS_SDK_HOME} && \
     dos2unix ${OCULUS_SDK_HOME}/*.py && \
     dos2unix ${OCULUS_SDK_HOME}/*.gradle && \
     dos2unix ${OCULUS_SDK_HOME}/*.mk && \
+    ${OCULUS_SDK_HOME}/gradlew printProjectName && \
+    cd ${OCULUS_SDK_HOME}/VrSamples/Native/VrTemplate/Projects/Android && \
+    sed -i -- 's/VrGui/VrGUI/g' *.gradle && \
+    sed -i -- 's/VrGui/VrGUI/g' jni/*.mk && \
+    env PATH=${PATH}:${ANDROID_HOME}/tools:${ANDROID_HOME}/platform-tools:${ANDROID_NDK} \
+      python build.py -n -c --no-daemon release && \
+    cd ${OCULUS_SDK_HOME} && \
     rm ovr_sdk_mobile_${OCULUS_SDK_VERSION}.zip && \
     rm -fr ${OCULUS_SDK_HOME}/SourceAssets && \
     rm -fr ${OCULUS_SDK_HOME}/sdcard_SDK && \
@@ -80,4 +122,4 @@ RUN mkdir -p ${OCULUS_SDK_HOME} && cd ${OCULUS_SDK_HOME} && \
     rm -fr ${OCULUS_SDK_HOME}/*.apk
 
 # Update PATH variables
-ENV PATH ${PATH}:${ANT_HOME}/bin:${GRADLE_HOME}/bin:${ANDROID_HOME}/tools:${ANDROID_HOME}/platform-tools:${ANDROID_NDK}
+ENV PATH ${PATH}:${ANDROID_HOME}/tools:${ANDROID_HOME}/platform-tools:${ANDROID_NDK}
