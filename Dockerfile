@@ -9,7 +9,7 @@ FROM ubuntu:trusty
 # Install Java and 32-bit tools for compiling Android
 RUN dpkg --add-architecture i386 && \
     apt-get update -y && \
-    apt-get install -y software-properties-common libc6:i386 libncurses5:i386 libstdc++6:i386 lib32z1 p7zip-full python build-essential dos2unix wget graphicsmagick imagemagick && \
+    apt-get install -y software-properties-common libc6:i386 libncurses5:i386 libstdc++6:i386 lib32z1 p7zip-full python build-essential dos2unix wget && \
     wget -qO- https://deb.nodesource.com/setup_5.x | bash - && \
     add-apt-repository ppa:webupd8team/java -y && \
     apt-get update -y && \
@@ -54,12 +54,12 @@ RUN cd /opt && \
     rm -fr ~/.android && rm -fr ~/.oracle_jre_usage
 
 # Installs Android NDK
-# ENV ANDROID_NDK_VERSION r10e
-#  ENV ANDROID_NDK /opt/android-ndk-${ANDROID_NDK_VERSION}
-#  RUN cd /opt && \
-#     wget -q https://dl.google.com/android/ndk/android-ndk-${ANDROID_NDK_VERSION}-linux-x86_64.bin && \
-#     7z x -y android-ndk-${ANDROID_NDK_VERSION}-linux-x86_64.bin > /dev/null && \
-#     rm android-ndk-${ANDROID_NDK_VERSION}-linux-x86_64.bin
+ENV ANDROID_NDK_VERSION r10e
+ENV ANDROID_NDK /opt/android-ndk-${ANDROID_NDK_VERSION}
+RUN cd /opt && \
+    wget -q https://dl.google.com/android/ndk/android-ndk-${ANDROID_NDK_VERSION}-linux-x86_64.bin && \
+    7z x -y android-ndk-${ANDROID_NDK_VERSION}-linux-x86_64.bin > /dev/null && \
+    rm android-ndk-${ANDROID_NDK_VERSION}-linux-x86_64.bin
 
 # Install Oculus SDK
 ENV OCULUS_SDK_VERSION 1.0.0.0
@@ -67,17 +67,17 @@ ENV OCULUS_SDK_HOME /opt/oculus-sdk
 RUN mkdir -p ${OCULUS_SDK_HOME} && cd ${OCULUS_SDK_HOME} && \
     wget -q https://static.oculus.com/sdk-downloads/ovr_sdk_mobile_${OCULUS_SDK_VERSION}.zip && \
     7z x -y ovr_sdk_mobile_${OCULUS_SDK_VERSION}.zip > /dev/null && \
-    rm ovr_sdk_mobile_${OCULUS_SDK_VERSION}.zip && \
-    rm -fr ${OCULUS_SDK_HOME}/SourceAssets && \
-    rm -fr ${OCULUS_SDK_HOME}/sdcard_SDK && \
-    rm -fr ${OCULUS_SDK_HOME}/VrSamples && \
-    rm -fr ${OCULUS_SDK_HOME}/*.apk && \
     touch ${OCULUS_SDK_HOME}/local.properties && \
     chmod a+x ${OCULUS_SDK_HOME}/gradlew && \
     dos2unix ${OCULUS_SDK_HOME}/gradlew && \
     dos2unix ${OCULUS_SDK_HOME}/*.py && \
     dos2unix ${OCULUS_SDK_HOME}/*.gradle && \
-    dos2unix ${OCULUS_SDK_HOME}/*.mk
+    dos2unix ${OCULUS_SDK_HOME}/*.mk && \
+    rm ovr_sdk_mobile_${OCULUS_SDK_VERSION}.zip && \
+    rm -fr ${OCULUS_SDK_HOME}/SourceAssets && \
+    rm -fr ${OCULUS_SDK_HOME}/sdcard_SDK && \
+    rm -fr ${OCULUS_SDK_HOME}/VrSamples && \
+    rm -fr ${OCULUS_SDK_HOME}/*.apk
 
 # Update PATH variables
 ENV PATH ${PATH}:${ANT_HOME}/bin:${GRADLE_HOME}/bin:${ANDROID_HOME}/tools:${ANDROID_HOME}/platform-tools:${ANDROID_NDK}
