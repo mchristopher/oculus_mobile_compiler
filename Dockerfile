@@ -89,11 +89,9 @@ RUN cd /opt && \
     rm -fr /opt/android-ndk-r10e/sources/android && \
     rm -fr /opt/android-ndk-r10e/sources/cpufeatures && \
     rm -fr /opt/android-ndk-r10e/sources/third_party && \
-    rm -fr /opt/android-ndk-r10e/sources/cxx-stl/gabi++ && \
     rm -fr /opt/android-ndk-r10e/sources/cxx-stl/gnu-libstdc++/4.9 && \
     rm -fr /opt/android-ndk-r10e/sources/cxx-stl/llvm-libc++ && \
     rm -fr /opt/android-ndk-r10e/sources/cxx-stl/llvm-libc++abi && \
-    rm -fr /opt/android-ndk-r10e/sources/cxx-stl/stlport && \
     rm -fr /opt/android-ndk-r10e/sources/cxx-stl/system
 
 # Install Oculus SDK & pre-compile libraries
