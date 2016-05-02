@@ -24,7 +24,7 @@ RUN dpkg --add-architecture i386 && \
 ENV JAVA_HOME /usr/lib/jvm/java-8-oracle
 
 # Installs Android SDK & NDK
-ENV ANDROID_API_LEVELS android-19
+ENV ANDROID_API_LEVELS android-19,android-23
 ENV ANDROID_BUILD_TOOLS_VERSION 22.0.1
 ENV ANDROID_HOME /opt/android-sdk-linux
 RUN cd /opt && \
